@@ -2,43 +2,43 @@
 
 namespace ExpenceManager.Controllers;
 
-[ApiController]
 [Route("api/expense-manager/[controller]")]
+[ApiController]
 public class ReceiptsController : ControllerBase
 {
     [HttpGet]
-    public async Task<string> GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        return await Task.FromResult("Receipt list will be here");
+        return Ok();
     }
 
-    [HttpGet("{id}")]
-    public async Task<string> Get()
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> Get(int id)
     {
-        return await Task.FromResult("Receipt will be here");
+        return Ok();
     }
 
     [HttpPost]
-    public async Task Create()
+    public async Task<IActionResult> Create()
     {
-
+        return Ok();
     }
 
-    [HttpDelete("{id}")]
-    public async Task Delete()
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
     {
-
+        return Ok();
     }
 
     [HttpPost("{id}/Position")]
-    public async Task CreatePosition()
+    public async Task<IActionResult> CreatePosition()
     {
-
+        return Ok();
     }
 
-    [HttpDelete("{id}/Position")]
-    public async Task DeletePosition()
+    [HttpDelete("{receiptId:int}/Position/{positionId:int}")]
+    public async Task<IActionResult> DeletePosition(int receiptId, int positionId)
     {
-
+        return Ok();
     }
 }

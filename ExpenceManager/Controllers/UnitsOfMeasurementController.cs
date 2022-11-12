@@ -2,25 +2,25 @@
 
 namespace ExpenceManager.Controllers;
 
-[ApiController]
 [Route("api/expense-manager/[controller]")]
+[ApiController]
 public class UnitsOfMeasurementController : ControllerBase
 {
     [HttpGet]
-    public async Task<string> Get()
+    public async Task<IActionResult> GetAll()
     {
-        return await Task.FromResult("Units of measurement will be here");
+        return Ok();
     }
 
     [HttpPost]
-    public async Task Create()
+    public async Task<IActionResult> Create()
     {
-
+        return Ok();
     }
 
-    [HttpDelete("{id}")]
-    public async Task Delete()
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
     {
-
+        return Ok();
     }
 }
