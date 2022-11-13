@@ -7,14 +7,20 @@ namespace ExpenceManager.Controllers;
 [ApiController]
 public class UnitsOfMeasurementController : ControllerBase
 {
+    [HttpPost]
+    public async Task<IActionResult> Create(NewUnitOfMeasurementDto unitOfMeasurement)
+    {
+        return Ok();
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         return Ok();
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create(NewUnitOfMeasurementDto unitOfMeasurement)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, UpdateUnitOfMeasurementDto unitOfMeasurement)
     {
         return Ok();
     }
