@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using DataTransferObjects;
 
 namespace ExpenceManager.Controllers;
 
@@ -13,7 +14,7 @@ public class UnitsOfMeasurementController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create()
+    public async Task<IActionResult> Create(NewUnitOfMeasurementDto unitOfMeasurement)
     {
         return Ok();
     }

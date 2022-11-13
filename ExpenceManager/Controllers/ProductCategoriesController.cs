@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using DataTransferObjects;
 
 namespace ExpenceManager.Controllers;
 
@@ -7,13 +8,13 @@ namespace ExpenceManager.Controllers;
 public class ProductCategoriesController : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll( )
+    public async Task<IActionResult> GetAll()
     {
         return Ok();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create()
+    public async Task<IActionResult> Create(NewProductCategoryDto product)
     {
         return Ok();
     }

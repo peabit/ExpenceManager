@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using DataTransferObjects;
 
 namespace ExpenceManager.Controllers;
 
@@ -19,7 +20,7 @@ public class ReceiptsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create()
+    public async Task<IActionResult> Create(NewReceiptDto receipt)
     {
         return Ok();
     }
@@ -30,8 +31,8 @@ public class ReceiptsController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("{id}/Position")]
-    public async Task<IActionResult> CreatePosition()
+    [HttpPost("{id:int}/Position")]
+    public async Task<IActionResult> CreatePosition(int receiptId, NewReceiptPositionDto position)
     {
         return Ok();
     }
