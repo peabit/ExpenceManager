@@ -4,6 +4,6 @@ namespace Services.Interfaces;
 
 internal interface IReportService
 {
-    Task GetProductCategoriesReport(DateTime from, DateTime to);
-    Task GetShopsReport(DateTime from, DateTime to);
+    Task<ProductCategoryReportDto> GetProductCategoryReport(DateTime from, DateTime to);
+    Task<ShopReportDto> GetShopReport(DateTime from, DateTime to);
 }

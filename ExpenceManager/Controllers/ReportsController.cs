@@ -7,13 +7,13 @@ namespace ExpenceManager.Controllers
     public class ReportsController : ControllerBase
     {
         [HttpGet("Categories")]
-        public async Task<IActionResult> GetCategoriesReport(DateTime from, DateTime to)
+        public async Task<IActionResult> GetCategoryReport(DateTime from, DateTime to)
         {
             return Ok();
         }
 
         [HttpGet("Shops")]
-        public async Task<IActionResult> GetShopsReport(DateTime from, DateTime to)
+        public async Task<IActionResult> GetShopReport(DateTime from, DateTime to)
         {
             return Ok();
         }
