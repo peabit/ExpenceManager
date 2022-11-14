@@ -2,7 +2,7 @@
 
 namespace Services.Interfaces;
 
-internal interface IProductCategoryService
+public interface IProductCategoryService
 {
     Task<ProductCategoryDto> Create(NewProductCategoryDto category);
     Task<IReadOnlyCollection<ProductCategoryDto>> GetAll();

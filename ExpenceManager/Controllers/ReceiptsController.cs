@@ -22,6 +22,7 @@ public class ReceiptsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
+        throw new Exception("Super critical error!!!");
         return Ok();
     }
 
