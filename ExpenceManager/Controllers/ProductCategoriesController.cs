@@ -7,14 +7,20 @@ namespace ExpenceManager.Controllers;
 [ApiController]
 public class ProductCategoriesController : ControllerBase
 {
+    [HttpPost]
+    public async Task<IActionResult> Create(NewProductCategoryDto product)
+    {
+        return Ok();
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         return Ok();
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create(NewProductCategoryDto product)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, UpdateProductCategoryDto categoryDto)
     {
         return Ok();
     }
