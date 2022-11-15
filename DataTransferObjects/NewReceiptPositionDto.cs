@@ -1,8 +1,8 @@
 ﻿namespace DataTransferObjects;
 
 public record NewReceiptPositionDto(
-    string Name, 
-    int CategoryId,
+    string ProductName, 
+    int ProductCategoryId,
     double Price,
     int Quantity,
     int UnitOfMeasurementId
