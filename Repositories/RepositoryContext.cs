@@ -9,7 +9,15 @@ public class RepositoryContext : DbContext
     {
         //Database.EnsureCreated();
     }
-
-    public DbSet<Receipt>? Receipts { get; set; }
-    public DbSet<ReceiptPosition>? ReceiptPositions { get; set; }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.LogTo(
+            message => System.Diagnostics.Debug.WriteLine(message),
+            new[ ] { DbLoggerCategory.Database.Command.Name }
+        );
+    }
+    public DbSet<Receipt> Receipts { get; set; }
+    public DbSet<ReceiptPosition> ReceiptPositions { get; set; }
+    public DbSet<ProductCategory> ProductCategories { get; set; }
+    public DbSet<UnitOfMeasurement> UnitOfMeasurement { get; set; }
 }
