@@ -16,6 +16,7 @@ public class RepositoryContext : DbContext
             new[ ] { DbLoggerCategory.Database.Command.Name }
         );
     }
+
     public DbSet<Receipt> Receipts { get; set; }
     public DbSet<ReceiptPosition> ReceiptPositions { get; set; }
     public DbSet<ProductCategory> ProductCategories { get; set; }

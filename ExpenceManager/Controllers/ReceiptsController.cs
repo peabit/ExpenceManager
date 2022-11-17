@@ -32,8 +32,21 @@ public class ReceiptsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        //_context.Receipts.Remove(_context.Receipts.First(r => r.Id == 2));
-        //await _context.SaveChangesAsync(); 
+        var receipt = new ReceiptPosition()
+        {
+            ReceiptId = 3,
+            Id = 1,
+            ProductName = "Молоко",
+            ProductCategoryId = 2,
+            ProductCategory = new()
+            {
+                Id = 1,
+                Name = "ПП"
+            }
+        };
+
+        _context.Update(receipt);
+        await _context.SaveChangesAsync(); 
 
         //throw new Exception("Super critical error!!!");
         return Ok();

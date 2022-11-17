@@ -1,43 +1,41 @@
 ﻿using Entities;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Repositories;
 
-public class RepositoryBase<TEntity> where TEntity : Entity
+public class RepositoryBase<TEntity> where TEntity : Entity, new()
 {
-	protected readonly RepositoryContext _context;
+    protected readonly RepositoryContext _context;
 
-	protected virtual IQueryable<TEntity> Entities
-		=> _context.Set<TEntity>().AsNoTracking();
+    private DbSet<TEntity> Entities
+        => _context.Set<TEntity>();
 
     public RepositoryBase(RepositoryContext context)
-		=> _context = context;
+        => _context = context;
 
-	public async virtual Task<TEntity> CreateAsync(TEntity entity)
-	{
-		_context.Set<TEntity>().Add(entity);
-		await _context.SaveChangesAsync();
-		return entity;
-	}
+    public async Task CreateAsync(TEntity entity)
+    {
+        Entities.Add(entity);
+        await _context.SaveChangesAsync();
+    }
 
-	public async virtual Task<IReadOnlyCollection<TEntity>> GetAllAsync()
-		=> await Entities.ToListAsync();
+    public virtual async Task<IReadOnlyCollection<TEntity>> GetAllAsync()
+        => await Entities.AsNoTracking().ToListAsync();
 
-	public async virtual Task<TEntity> GetAsync(int id)
-		=> await Entities.FirstAsync(e => e.Id == id);
+    public virtual async Task<IReadOnlyCollection<TEntity>> Get(Expression<Func<TEntity, bool>> expression)
+        => await Entities.Where(expression).ToListAsync();
 
-	public async virtual Task UpdateAsync(TEntity entity)
-	{
-		_context.Set<TEntity>().Update(entity);
-		await _context.SaveChangesAsync();
-	}
+    public async Task UpdateAsync(TEntity entity)
+    {
+        Entities.Update(entity);
+        await _context.SaveChangesAsync();
+    }
 
-	public async virtual Task DeleteAsync(int id)
-	{
-		_context.Set<TEntity>().Remove(
-            _context.Set<TEntity>().First( e => e.Id == id )
-        );
-
-		await _context.SaveChangesAsync();
-	}
+    public async Task DeleteAsync(int id)
+    {
+        Entities.Remove(new TEntity() { Id = id });
+        await _context.SaveChangesAsync();
+    }
 }
