@@ -9,11 +9,11 @@ namespace ExpenceManager.Controllers;
 [ApiController]
 public class ReceiptsController : ControllerBase
 {
-    private readonly RepositoryContext _context;
+    private readonly RepositoryBase<ReceiptPosition> _repository;
 
-    public ReceiptsController(RepositoryContext context)
+    public ReceiptsController(RepositoryBase<ReceiptPosition> repository)
     {
-        _context = context;
+        _repository = repository;
     }
 
     [HttpPost]
@@ -25,31 +25,15 @@ public class ReceiptsController : ControllerBase
     [HttpPost("{id:int}/Position")]
     public async Task<IActionResult> CreatePosition(int receiptId, NewReceiptPositionDto position)
     {
-
         return Ok();
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IEnumerable<ReceiptPosition>> GetAll()
     {
-        var receipt = new ReceiptPosition()
-        {
-            ReceiptId = 3,
-            Id = 1,
-            ProductName = "Молоко",
-            ProductCategoryId = 2,
-            ProductCategory = new()
-            {
-                Id = 1,
-                Name = "ПП"
-            }
-        };
+        var positions = await _repository.GetAllAsync();
 
-        _context.Update(receipt);
-        await _context.SaveChangesAsync(); 
-
-        //throw new Exception("Super critical error!!!");
-        return Ok();
+        return positions;
     }
 
     [HttpGet("{id:int}")]

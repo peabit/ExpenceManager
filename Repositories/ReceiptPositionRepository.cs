@@ -9,7 +9,7 @@ public class ReceiptPositionRepository : RepositoryBase<ReceiptPosition>
     private IQueryable<ReceiptPosition> ReceiptPositions
         => _context.ReceiptPositions
             .Include(p => p.ProductCategory)
-            .Include(p => p.UnitOfMeasurementId)
+            .Include(p => p.UnitOfMeasurement)
             .AsNoTracking();
 
     public ReceiptPositionRepository(RepositoryContext context) : base(context) { }
