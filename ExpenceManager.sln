@@ -9,9 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataTransferObjects", "Data
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Interfaces", "Services.Interfaces\Services.Interfaces.csproj", "{BA0D27FB-2964-483C-897C-4B3FCC3B45B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositories", "Repositories\Repositories.csproj", "{CDCED4FA-F376-42E3-BE89-8B610D234A6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repositories", "Repositories\Repositories.csproj", "{CDCED4FA-F376-42E3-BE89-8B610D234A6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{81A37440-F67A-4E13-B674-5FA6E2804C15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{81A37440-F67A-4E13-B674-5FA6E2804C15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{24A8AD41-6CA7-4D6C-881E-5A003EEFA4A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositories.Interfaces", "Repositories.Interfaces\Repositories.Interfaces.csproj", "{1E966FC9-0423-4D86-BDAC-FB696BFAAF60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{81A37440-F67A-4E13-B674-5FA6E2804C15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81A37440-F67A-4E13-B674-5FA6E2804C15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81A37440-F67A-4E13-B674-5FA6E2804C15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24A8AD41-6CA7-4D6C-881E-5A003EEFA4A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24A8AD41-6CA7-4D6C-881E-5A003EEFA4A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24A8AD41-6CA7-4D6C-881E-5A003EEFA4A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24A8AD41-6CA7-4D6C-881E-5A003EEFA4A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E966FC9-0423-4D86-BDAC-FB696BFAAF60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E966FC9-0423-4D86-BDAC-FB696BFAAF60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E966FC9-0423-4D86-BDAC-FB696BFAAF60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E966FC9-0423-4D86-BDAC-FB696BFAAF60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

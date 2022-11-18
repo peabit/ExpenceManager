@@ -1,11 +1,13 @@
 ﻿using Entities;
+using Repositories.Interfaces;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace Repositories;
 
-public class RepositoryBase<TEntity> where TEntity : Entity, new()
+public class RepositoryBase<TEntity> : IRepository<TEntity> 
+    where TEntity : Entity, new()
 {
     protected readonly RepositoryContext _context;
 
