@@ -2,8 +2,8 @@
 
 public record ReceiptPositionDto(
     int Id, 
-    string Name, 
-    ProductCategoryDto Category,
+    string ProductName, 
+    ProductCategoryDto ProductCategory,
     double Price,
     int Quantity, 
     UnitOfMeasurementDto UnitOfMeasurement,

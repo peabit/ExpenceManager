@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Repositories;
 using DataTransferObjects;
+using Entities;
 
 namespace ExpenceManager.Controllers;
 
@@ -7,6 +9,13 @@ namespace ExpenceManager.Controllers;
 [ApiController]
 public class ReceiptsController : ControllerBase
 {
+    private readonly RepositoryBase<ReceiptPosition> _repository;
+
+    public ReceiptsController(RepositoryBase<ReceiptPosition> repository)
+    {
+        _repository = repository;
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create(NewReceiptDto receipt)
     {
@@ -20,10 +29,11 @@ public class ReceiptsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IEnumerable<ReceiptPosition>> GetAll()
     {
-        throw new Exception("Super critical error!!!");
-        return Ok();
+        var positions = await _repository.GetAllAsync();
+
+        return positions;
     }
 
     [HttpGet("{id:int}")]
