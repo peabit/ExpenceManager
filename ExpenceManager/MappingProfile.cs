@@ -11,13 +11,6 @@ public class MappingProfile : Profile
         CreateMap<Receipt, ReceiptDto>();
         CreateMap<NewReceiptDto, Receipt>();
         CreateMap<NewReceiptPositionDto, ReceiptPosition>();
-
-        CreateMap<ReceiptPosition, ReceiptPositionDto>()
-            .ForMember(
-                dto => dto.ProductCategory, opt => opt.MapFrom(p => p.ProductCategory.Name)
-            )
-            .ForMember(
-                dto => dto.UnitOfMeasurement, opt => opt.MapFrom(p => p.UnitOfMeasurement.Name)
-            );
+        CreateMap<ReceiptPosition, ReceiptPositionDto>();
     }
 }

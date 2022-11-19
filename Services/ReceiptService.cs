@@ -127,7 +127,7 @@ public sealed class ReceiptService : IReceiptService
         await _repository.UpdateAsync(receiptEntity);
     }
 
-    public async Task UpdatePosition(int receiptId, int positionId, UpdateReceiptPositionDto position)
+    public async Task UpdatePositionAsync(int receiptId, int positionId, UpdateReceiptPositionDto position)
     {
         var positionEntity = _mapper.Map<ReceiptPosition>(position);
         positionEntity.ReceiptId = receiptId;

@@ -3,9 +3,9 @@
 public record ReceiptPositionDto(
     int Id, 
     string ProductName, 
-    string ProductCategory,
+    string ProductCategoryName,
     double Price,
     int Quantity, 
-    string UnitOfMeasurement,
+    string UnitOfMeasurementName,
     double Coast
 );

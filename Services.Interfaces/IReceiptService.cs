@@ -14,5 +14,5 @@ public interface IReceiptService
     Task<IReadOnlyCollection<ReceiptDto>> GetAsync(string shopName);
     Task<IReadOnlyCollection<ReceiptPositionDto>> GetPositionsAsync(int idReceipt);
     Task UpdateAsync(int id, UpdateReceiptDto receipt);
-    Task UpdatePosition(int receiptId, int positionId, UpdateReceiptPositionDto position);
+    Task UpdatePositionAsync(int receiptId, int positionId, UpdateReceiptPositionDto position);
 }
