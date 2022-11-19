@@ -2,6 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using ExpenceManager;
 using Repositories;
 using Entities;
+using Repositories.Interfaces;
+using AutoMapper.Execution;
+using Services.Interfaces;
+using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +14,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<RepositoryContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL"))
 );
-builder.Services.AddScoped<RepositoryBase<ReceiptPosition>, ReceiptPositionRepository>();
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddScoped<IReceiptRepository, ReceiptRepository>();
+builder.Services.AddScoped<IReceiptService, ReceiptService>();
 
 var app = builder.Build();
 

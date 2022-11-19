@@ -19,6 +19,14 @@ public sealed class ReceiptService : IReceiptService
 
     public async Task<ReceiptDto> CreateAsync(NewReceiptDto receipt)
     {
+        if (receipt.Positions.Count == 0)
+        {
+            // TODO: Exception
+        }
+
+        // TODO: Product category isn`t exists
+        // TODO: Unit of measurement isn`t exists
+
         var receiptEntity = _mapper.Map<Receipt>(receipt);
         await _repository.CreateAsync(receiptEntity);
         return _mapper.Map<ReceiptDto>(receiptEntity);

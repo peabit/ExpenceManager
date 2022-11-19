@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Repositories;
 using DataTransferObjects;
-using Entities;
+using Services.Interfaces;
 
 namespace ExpenceManager.Controllers;
 
@@ -9,18 +8,18 @@ namespace ExpenceManager.Controllers;
 [ApiController]
 public class ReceiptsController : ControllerBase
 {
-    private readonly RepositoryBase<ReceiptPosition> _repository;
+    private readonly IReceiptService _receiptService;
 
-    public ReceiptsController(RepositoryBase<ReceiptPosition> repository)
+    public ReceiptsController(IReceiptService receiptService)
     {
-        _repository = repository;
+        _receiptService = receiptService;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(NewReceiptDto receipt)
-    {
+    public async Task<IActionResult> Create(NewReceiptDto receipt) {
+        await _receiptService.CreateAsync(receipt);
         return Ok();
-    }
+    } 
 
     [HttpPost("{id:int}/Position")]
     public async Task<IActionResult> CreatePosition(int receiptId, NewReceiptPositionDto position)
@@ -29,12 +28,8 @@ public class ReceiptsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<ReceiptPosition>> GetAll()
-    {
-        var positions = await _repository.GetAllAsync();
-
-        return positions;
-    }
+    public async Task<IEnumerable<ReceiptDto>> GetAll()
+        =>await _receiptService.GetAllAsync();
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Get(int id)

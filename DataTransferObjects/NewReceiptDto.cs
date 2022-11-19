@@ -1,7 +1,8 @@
 ﻿namespace DataTransferObjects;
 
-public record NewReceiptDto(
-    string ShopName, 
-    DateTime DateTime, 
-    IReadOnlyCollection<NewReceiptPositionDto> Positions
-);
+public record NewReceiptDto
+{
+    public string? ShopName { get; set; }   
+    public DateTime DateTime { get; set; }
+    public IReadOnlyCollection<NewReceiptPositionDto>? Positions { get; set; }
+}

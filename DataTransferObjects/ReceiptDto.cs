@@ -1,9 +1,9 @@
 ﻿namespace DataTransferObjects;
 
-public record ReceiptDto(
-    int Id,
-    string ShopName,
-    DateTime DateTime, 
-    double TotalAmount, 
-    IReadOnlyCollection<ReceiptPositionDto> Positions
-);
+public record ReceiptDto
+{
+    public int Id { get; set; }
+    public string? ShopName { get; set; }
+    public DateTime DateTime { get; set; }
+    public double TotalAmount { get; set; }
+}

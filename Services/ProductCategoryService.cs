@@ -12,22 +12,22 @@ public sealed class ProductCategoryService : IProductCategoryService
     public ProductCategoryService(IRepository<ProductCategory> repository)
         => _repository = repository;
 
-    public Task<ProductCategoryDto> Create(NewProductCategoryDto category)
+    public async Task<ProductCategoryDto> CreateAsync(NewProductCategoryDto category)
     {
         throw new NotImplementedException();
     }
 
-    public Task Delete(int id)
+    public async Task DeleteAsync(int id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IReadOnlyCollection<ProductCategoryDto>> GetAll()
+    public async Task<IReadOnlyCollection<ProductCategoryDto>> GetAllAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task Update(int id, UpdateProductCategoryDto category)
+    public async Task UpdateAsync(int id, UpdateProductCategoryDto category)
     {
         throw new NotImplementedException();
     }
