@@ -11,34 +11,26 @@ public class ReceiptsController : ControllerBase
     private readonly IReceiptService _receiptService;
 
     public ReceiptsController(IReceiptService receiptService)
-    {
-        _receiptService = receiptService;
-    }
-
+        => _receiptService = receiptService;
+    
     [HttpPost]
-    public async Task<IActionResult> Create(NewReceiptDto receipt) {
-        await _receiptService.CreateAsync(receipt);
-        return Ok();
-    } 
+    public async Task<ReceiptDto> Create(NewReceiptDto receipt) 
+        => await _receiptService.CreateAsync(receipt);
 
-    [HttpPost("{id:int}/Position")]
-    public async Task<IActionResult> CreatePosition(int receiptId, NewReceiptPositionDto position)
-    {
-        return Ok();
-    }
+    [HttpPost("{id:int}/Positions")]
+    public async Task<ReceiptPositionDto> CreatePosition(int receiptId, NewReceiptPositionDto position)
+        => await _receiptService.CreatePositionAsync(receiptId, position);
 
     [HttpGet]
     public async Task<IEnumerable<ReceiptDto>> GetAll()
         =>await _receiptService.GetAllAsync();
 
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> Get(int id)
-    {
-        return Ok();
-    }
+    [HttpGet("{receiptId:int}/Positions")]
+    public async Task<IEnumerable<ReceiptPositionDto>> GetPositionsAsync(int receiptId)
+        => await _receiptService.GetPositionsAsync(receiptId);
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, UpdateReceiptDto receipt)
+    public async Task<IActionResult> Update(int receiptId, UpdateReceiptDto receipt)
     {
         return Ok();
     }
@@ -50,7 +42,7 @@ public class ReceiptsController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int receiptId)
     {
         return Ok();
     }
