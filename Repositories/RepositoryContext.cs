@@ -3,7 +3,7 @@ using Entities;
 
 namespace Repositories;
 
-public class RepositoryContext : DbContext
+public sealed class RepositoryContext : DbContext
 {
     public RepositoryContext(DbContextOptions options) : base(options)
     {

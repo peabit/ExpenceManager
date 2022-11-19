@@ -4,8 +4,8 @@ namespace Services.Interfaces;
 
 public interface IUnitOfMeasurementService
 {
-    Task<UnitOfMeasurementDto> Create(NewUnitOfMeasurementDto unitOfMeasurement);
-    Task<IReadOnlyCollection<UnitOfMeasurementDto>> GetAll();
-    Task Update(int id, UpdateUnitOfMeasurementDto unitOfMeasurement);
-    Task Delete(int id);
+    Task<UnitOfMeasurementDto> CreateAsync(NewUnitOfMeasurementDto unitOfMeasurement);
+    Task<IReadOnlyCollection<UnitOfMeasurementDto>> GetAllAsync();
+    Task UpdateAsync(int id, UpdateUnitOfMeasurementDto unitOfMeasurement);
+    Task DeleteAsync(int id);
 }

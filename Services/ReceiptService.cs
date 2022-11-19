@@ -1,61 +1,140 @@
-﻿using Entities;
+﻿using AutoMapper;
 using Services.Interfaces;
+using Entities;
 using DataTransferObjects;
 using Repositories.Interfaces;
 
 namespace Services;
 
-public class ReceiptService : ServiceBase<Receipt>, IReceiptService
+public sealed class ReceiptService : IReceiptService
 {
-    public ReceiptService(IRepository<Receipt> repository) : base(repository) { }
+    private readonly IReceiptRepository _repository;
+    private readonly IMapper _mapper;
 
-    public Task<ReceiptDto> Create(NewReceiptDto receipt)
+    public ReceiptService(IReceiptRepository repository, IMapper mapper)
     {
-        throw new NotImplementedException();
+        _repository = repository;
+        _mapper = mapper;
     }
 
-    public Task<ReceiptPositionDto> CreatePosition(int receiptId, NewReceiptPositionDto position)
+    public async Task<ReceiptDto> CreateAsync(NewReceiptDto receipt)
     {
-        throw new NotImplementedException();
+        var receiptEntity = _mapper.Map<Receipt>(receipt);
+        await _repository.CreateAsync(receiptEntity);
+        return _mapper.Map<ReceiptDto>(receiptEntity);
     }
 
-    public Task Delete(int id)
+    public async Task<ReceiptPositionDto> CreatePositionAsync(int receiptId, NewReceiptPositionDto position)
     {
-        throw new NotImplementedException();
+        ThrowIfReceiptNotExist(receiptId);
+
+        var positionEntity = _mapper.Map<ReceiptPosition>(position);
+        positionEntity.ReceiptId = receiptId;
+
+        // TODO: Add filling navigation properties
+        await _repository.CreatePositionAsync(positionEntity);
+
+        return _mapper.Map<ReceiptPositionDto>(positionEntity);
     }
 
-    public Task DeletePosition(int idReceipt, int idPosition)
+    public async Task DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        ThrowIfReceiptNotExist(id);
+        await _repository.DeleteAsync(id);
     }
 
-    public Task<IReadOnlyCollection<ReceiptDto>> Get(DateTime from, DateTime to)
+    public async Task DeletePositionAsync(int idReceipt, int idPosition)
     {
-        throw new NotImplementedException();
+        ThrowIfReceiptNotExist(idReceipt);
+        ThrowIfPositionNotExist(idReceipt, idPosition);
+
+        await _repository.DeletePositionAsync(idReceipt, idPosition);
     }
 
-    public Task<ReceiptDto> Get(int id)
+    public async Task<IReadOnlyCollection<ReceiptDto>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        var receipts = await _repository.GetAllAsync();
+
+        if (receipts is null)
+        {
+            // TODO: Exception
+        }
+
+        return _mapper.Map<IReadOnlyCollection<ReceiptDto>>(receipts);
     }
 
-    public Task<ReceiptDto> Get(string shopName)
+    public async Task<IReadOnlyCollection<ReceiptDto>> GetAsync(DateTime from, DateTime to)
     {
-        throw new NotImplementedException();
+        var receipts = await _repository.GetAsync(r => r.DateTime >= from & r.DateTime <= to);
+
+        if (receipts is null)
+        {
+            // TODO: Exception
+        }
+
+        return _mapper.Map<IReadOnlyCollection<ReceiptDto>>(receipts);
     }
 
-    public Task<IReadOnlyCollection<ReceiptDto>> GetAll()
+    public async Task<ReceiptDto> GetAsync(int id)
     {
-        throw new NotImplementedException();
+        var receipt = await _repository.GetAsync(id);
+
+        if (receipt is null)
+        {
+            // TODO: Exceiption
+        }
+
+        return _mapper.Map<ReceiptDto>(receipt);
     }
 
-    public Task Update(int id, UpdateReceiptDto receipt)
+    public async Task<IReadOnlyCollection<ReceiptDto>> GetAsync(string shopName)
     {
-        throw new NotImplementedException();
+        var receipts = await _repository.GetAsync(r => r.ShopName == shopName);
+
+        if (receipts is null)
+        {
+            // TODO: Exception
+        }
+
+        return _mapper.Map<IReadOnlyCollection<ReceiptDto>>(receipts);
     }
 
-    public Task UpdatePosition(int idReceipt, int idPosition, UpdateReceiptPositionDto position)
+    public async Task<IReadOnlyCollection<ReceiptPositionDto>> GetPositionsAsync(int idReceipt)
     {
-        throw new NotImplementedException();
+        var positions = await _repository.GetPositionsAsync(idReceipt);
+
+        if (positions is null)
+        {
+            // TODO: Exception
+        }
+
+        return _mapper.Map<IReadOnlyCollection<ReceiptPositionDto>>(positions);
     }
-}
+
+    public async Task UpdateAsync(int id, UpdateReceiptDto receipt)
+    {
+        var receiptEntity = _mapper.Map<Receipt>(receipt);
+        receiptEntity.Id = id;
+
+        await _repository.UpdateAsync(receiptEntity);
+    }
+
+    public async Task UpdatePosition(int receiptId, int positionId, UpdateReceiptPositionDto position)
+    {
+        var positionEntity = _mapper.Map<ReceiptPosition>(position);
+        positionEntity.ReceiptId = receiptId;
+        positionEntity.Id = positionId;
+
+        await _repository.UpdatePositionAsync(positionEntity);
+    }
+
+    private void ThrowIfReceiptNotExist(int id)
+    {
+
+    }
+
+    private void ThrowIfPositionNotExist(int idReceipt, int idPosition)
+    {
+
+    }
+}   

@@ -5,11 +5,14 @@ using DataTransferObjects;
 
 namespace Services;
 
-public class UnitOfMeasurementService : ServiceBase<UnitOfMeasurement>, IUnitOfMeasurementService
+public sealed class UnitOfMeasurementService : IUnitOfMeasurementService
 {
-	public UnitOfMeasurementService(IRepository<UnitOfMeasurement> repository) : base(repository) { }
+	private readonly IRepositoryBase<UnitOfMeasurement> _repository;
 
-	public Task<UnitOfMeasurementDto> Create(NewUnitOfMeasurementDto unitOfMeasurement)
+	public UnitOfMeasurementService(IRepositoryBase<UnitOfMeasurement> repository) 
+		=> _repository = repository;
+
+    public Task<UnitOfMeasurementDto> Create(NewUnitOfMeasurementDto unitOfMeasurement)
 	{
 		throw new NotImplementedException();
 	}

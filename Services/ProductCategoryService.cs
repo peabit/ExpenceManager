@@ -5,9 +5,12 @@ using DataTransferObjects;
 
 namespace Services;
 
-public class ProductCategoryService : ServiceBase<ProductCategory>, IProductCategoryService
+public sealed class ProductCategoryService : IProductCategoryService
 {
-    public ProductCategoryService(IRepository<ProductCategory> repository) : base(repository) { }
+    private readonly IRepository<ProductCategory> _repository;
+
+    public ProductCategoryService(IRepository<ProductCategory> repository)
+        => _repository = repository;
 
     public Task<ProductCategoryDto> Create(NewProductCategoryDto category)
     {
