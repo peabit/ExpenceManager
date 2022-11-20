@@ -13,18 +13,18 @@ public sealed class ReceiptRepository : RepositoryBase<Receipt>, IReceiptReposit
 
     public ReceiptRepository(RepositoryContext context) : base(context) { }
 
+    public async Task<IReadOnlyCollection<ReceiptPosition>> GetPositionsAsync(int receipId)
+    => await Positions
+        .Where(p => p.ReceiptId == receipId)
+        .AsNoTracking()
+        .ToListAsync();
+
     public async Task CreatePositionAsync(ReceiptPosition position)
     {
         _context.ReceiptPositions.Add(position);
         await _context.SaveChangesAsync();
         Positions.Where(p => p == position).Load();
     }
-
-    public async Task<IReadOnlyCollection<ReceiptPosition>> GetPositionsAsync(int receipId)
-        => await Positions
-            .Where(p => p.ReceiptId == receipId)
-            .AsNoTracking()
-            .ToListAsync();
 
     public async Task UpdatePositionAsync(ReceiptPosition position)
     {

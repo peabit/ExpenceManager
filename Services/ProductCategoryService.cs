@@ -1,4 +1,5 @@
-﻿using Services.Interfaces;
+﻿using AutoMapper;
+using Services.Interfaces;
 using Entities;
 using Repositories.Interfaces;
 using DataTransferObjects;
@@ -8,27 +9,51 @@ namespace Services;
 public sealed class ProductCategoryService : IProductCategoryService
 {
     private readonly IRepository<ProductCategory> _repository;
+    private readonly IMapper _mapper;
 
-    public ProductCategoryService(IRepository<ProductCategory> repository)
-        => _repository = repository;
-
-    public async Task<ProductCategoryDto> CreateAsync(NewProductCategoryDto category)
+    public ProductCategoryService(IRepository<ProductCategory> repository, IMapper mapper)
     {
-        throw new NotImplementedException();
-    }
-
-    public async Task DeleteAsync(int id)
-    {
-        throw new NotImplementedException();
+        _repository = repository;
+        _mapper = mapper;
     }
 
     public async Task<IReadOnlyCollection<ProductCategoryDto>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        var categories = await _repository.GetAllAsync();
+
+        if (categories is null)
+        {
+            // TODO: Exceiption
+        }
+
+        return _mapper.Map<IReadOnlyCollection<ProductCategoryDto>>(categories);
     }
 
-    public async Task UpdateAsync(int id, UpdateProductCategoryDto category)
+    public async Task<ProductCategoryDto> CreateAsync(NewProductCategoryDto category)
     {
-        throw new NotImplementedException();
+        var categoryEntity = _mapper.Map<ProductCategory>(category);
+        await _repository.CreateAsync(categoryEntity);
+        return _mapper.Map<ProductCategoryDto>(categoryEntity);
+    }
+
+    public async Task UpdateAsync(int categoryId, UpdateProductCategoryDto category)
+    {
+        ThrowIfReceiptNotExist(categoryId);
+
+        var categoryEntity = _mapper.Map<ProductCategory>(category);
+        categoryEntity.Id = categoryId;
+
+        await _repository.UpdateAsync(categoryEntity);
+    }
+
+    public async Task DeleteAsync(int categoryId)
+    {
+        ThrowIfReceiptNotExist(categoryId);
+        await _repository.DeleteAsync(categoryId);
+    }
+
+    private void ThrowIfReceiptNotExist(int categoryId)
+    {
+
     }
 }

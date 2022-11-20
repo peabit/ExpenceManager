@@ -4,8 +4,8 @@ namespace Services.Interfaces;
 
 public interface IProductCategoryService
 {
-    Task<ProductCategoryDto> CreateAsync(NewProductCategoryDto category);
     Task<IReadOnlyCollection<ProductCategoryDto>> GetAllAsync();
-    Task UpdateAsync(int id, UpdateProductCategoryDto category);
-    Task DeleteAsync(int id);
+    Task<ProductCategoryDto> CreateAsync(NewProductCategoryDto category);
+    Task UpdateAsync(int categoryId, UpdateProductCategoryDto category);
+    Task DeleteAsync(int categoryId);
 }

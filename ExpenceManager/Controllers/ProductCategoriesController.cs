@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DataTransferObjects;
+using Services.Interfaces;
 
 namespace ExpenceManager.Controllers;
 
@@ -7,27 +8,30 @@ namespace ExpenceManager.Controllers;
 [ApiController]
 public class ProductCategoriesController : ControllerBase
 {
-    [HttpPost]
-    public async Task<IActionResult> Create(NewProductCategoryDto product)
-    {
-        return Ok();
-    }
+    private readonly IProductCategoryService _сategoryService;
+
+    public ProductCategoriesController(IProductCategoryService сategoryService)
+        => _сategoryService = сategoryService;
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IReadOnlyCollection<ProductCategoryDto>> GetAllAsync()
     {
-        return Ok();
+        var categories = await _сategoryService.GetAllAsync();
+        return categories;
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, UpdateProductCategoryDto categoryDto)
+    [HttpPost]
+    public async Task<ProductCategoryDto> CreateAsync(NewProductCategoryDto category)
     {
-        return Ok();
+        var newCategory = await _сategoryService.CreateAsync(category);
+        return newCategory;
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        return Ok();
-    }
+    [HttpPut("{сategorId:int}")]
+    public async Task UpdateAsync(int сategorId, UpdateProductCategoryDto categoryDto)
+        => await _сategoryService.UpdateAsync(сategorId, categoryDto);
+
+    [HttpDelete("{сategorId:int}")]
+    public async Task DeleteAsync(int сategorId)
+        => await _сategoryService.DeleteAsync(сategorId);
 }

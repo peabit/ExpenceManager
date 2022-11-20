@@ -14,5 +14,13 @@ public class MappingProfile : Profile
         CreateMap<ReceiptPosition, ReceiptPositionDto>();
         CreateMap<UpdateReceiptDto, Receipt>();
         CreateMap<UpdateReceiptPositionDto, ReceiptPosition>();
+
+        CreateMap<ProductCategory, ProductCategoryDto>();
+        CreateMap<NewProductCategoryDto, ProductCategory>();
+        CreateMap<UpdateProductCategoryDto, ProductCategory>();
+
+        CreateMap<UnitOfMeasurement, UnitOfMeasurementDto>();
+        CreateMap<NewUnitOfMeasurementDto, UnitOfMeasurement>();
+        CreateMap<UpdateUnitOfMeasurementDto, UnitOfMeasurement>();
     }
 }

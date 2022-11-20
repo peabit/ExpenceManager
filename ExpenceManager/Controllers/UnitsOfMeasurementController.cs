@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DataTransferObjects;
+using Services.Interfaces;
 
 namespace ExpenceManager.Controllers;
 
@@ -7,27 +8,31 @@ namespace ExpenceManager.Controllers;
 [ApiController]
 public class UnitsOfMeasurementController : ControllerBase
 {
-    [HttpPost]
-    public async Task<IActionResult> Create(NewUnitOfMeasurementDto unitOfMeasurement)
-    {
-        return Ok();
-    }
+    private readonly IUnitOfMeasurementService _unitOfMeasurementService;
+
+    public UnitsOfMeasurementController(IUnitOfMeasurementService unitOfMeasurementService)
+        => _unitOfMeasurementService = unitOfMeasurementService;    
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IReadOnlyCollection<UnitOfMeasurementDto>> GetAllAsync()
     {
-        return Ok();
+        var unitsOfMeasurement = await _unitOfMeasurementService.GetAllAsync();
+        return unitsOfMeasurement;
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, UpdateUnitOfMeasurementDto unitOfMeasurement)
+    [HttpPost]
+    public async Task<UnitOfMeasurementDto> CreateAsync(NewUnitOfMeasurementDto unitOfMeasurement)
     {
-        return Ok();
+        var newUnitOfMeasurement = await _unitOfMeasurementService.CreateAsync(unitOfMeasurement);
+        return newUnitOfMeasurement;
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        return Ok();
-    }
+    [HttpPut("{unitOfMeasurementId:int}")]
+    public async Task UpdateAsync(int unitOfMeasurementId, UpdateUnitOfMeasurementDto unitOfMeasurement)
+        => await _unitOfMeasurementService.UpdateAsync(unitOfMeasurementId, unitOfMeasurement);
+
+
+    [HttpDelete("{unitOfMeasurementId:int}")]
+    public async Task DeleteAsync(int unitOfMeasurementId)
+        => await _unitOfMeasurementService.DeleteAsync(unitOfMeasurementId);
 }

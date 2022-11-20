@@ -1,34 +1,53 @@
-﻿using Services.Interfaces;
+﻿using AutoMapper;
+using Services.Interfaces;
 using Entities;
 using Repositories.Interfaces;
 using DataTransferObjects;
 
 namespace Services;
 
-public sealed class UnitOfMeasurementService //: IUnitOfMeasurementService
+public sealed class UnitOfMeasurementService : IUnitOfMeasurementService
 {
-	//private readonly IRepositoryBase<UnitOfMeasurement> _repository;
+    private readonly IRepository<UnitOfMeasurement> _unitOfMeasurementRepository;
+    private readonly IMapper _mapper;
 
-	//public UnitOfMeasurementService(IRepositoryBase<UnitOfMeasurement> repository) 
-	//	=> _repository = repository;
+    public UnitOfMeasurementService(IRepository<UnitOfMeasurement> unitOfMeasurementRepository, IMapper mapper)
+    {
+        _unitOfMeasurementRepository = unitOfMeasurementRepository;
+        _mapper = mapper;
+    }
 
- //   public Task<UnitOfMeasurementDto> Create(NewUnitOfMeasurementDto unitOfMeasurement)
-	//{
-	//	throw new NotImplementedException();
-	//}
+    public async Task<IReadOnlyCollection<UnitOfMeasurementDto>> GetAllAsync()
+    {
+        var unitsOfMeasurement = await _unitOfMeasurementRepository.GetAllAsync();
+        return _mapper.Map<IReadOnlyCollection<UnitOfMeasurementDto>>(unitsOfMeasurement);
+    }
 
-	//public Task Delete(int id)
-	//{
-	//	throw new NotImplementedException();
-	//}
+    public async Task<UnitOfMeasurementDto> CreateAsync(NewUnitOfMeasurementDto unitOfMeasurement)
+	{
+        var unitOfMeasurementEntity = _mapper.Map<UnitOfMeasurement>(unitOfMeasurement);
+        await _unitOfMeasurementRepository.CreateAsync(unitOfMeasurementEntity);
+        return _mapper.Map<UnitOfMeasurementDto>(unitOfMeasurementEntity);
+	}
 
-	//public Task<IReadOnlyCollection<UnitOfMeasurementDto>> GetAll()
-	//{
-	//	throw new NotImplementedException();
-	//}
+    public async Task UpdateAsync(int unitOfMeasurementId, UpdateUnitOfMeasurementDto unitOfMeasurement)
+    {
+        ThrowIfReceiptNotExist(unitOfMeasurementId);
+        
+        var unitOfMeasurementEntity = _mapper.Map<UnitOfMeasurement>(unitOfMeasurement);
+        unitOfMeasurementEntity.Id = unitOfMeasurementId;
+        
+        await _unitOfMeasurementRepository.UpdateAsync(unitOfMeasurementEntity);
+    }
 
-	//public Task Update(int id, UpdateUnitOfMeasurementDto unitOfMeasurement)
-	//{
-	//	throw new NotImplementedException();
-	//}
+    public async Task DeleteAsync(int unitOfMeasurementId)
+    {
+        ThrowIfReceiptNotExist(unitOfMeasurementId);
+        await _unitOfMeasurementRepository.DeleteAsync(unitOfMeasurementId);
+    }
+
+    private void ThrowIfReceiptNotExist(int categoryId)
+    {
+
+    }
 }
