@@ -9,8 +9,7 @@ public sealed class ReceiptRepository : RepositoryBase<Receipt>, IReceiptReposit
     private IQueryable<ReceiptPosition> Positions
     => _context.ReceiptPositions
         .Include(p => p.ProductCategory)
-        .Include(p => p.UnitOfMeasurement)
-        .AsNoTracking();
+        .Include(p => p.UnitOfMeasurement);
 
     public ReceiptRepository(RepositoryContext context) : base(context) { }
 
@@ -18,10 +17,14 @@ public sealed class ReceiptRepository : RepositoryBase<Receipt>, IReceiptReposit
     {
         _context.ReceiptPositions.Add(position);
         await _context.SaveChangesAsync();
+        Positions.Where(p => p == position).Load();
     }
 
     public async Task<IReadOnlyCollection<ReceiptPosition>> GetPositionsAsync(int receipId)
-        => await Positions.Where(p => p.ReceiptId == receipId).ToListAsync();
+        => await Positions
+            .Where(p => p.ReceiptId == receipId)
+            .AsNoTracking()
+            .ToListAsync();
 
     public async Task UpdatePositionAsync(ReceiptPosition position)
     {

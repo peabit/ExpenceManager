@@ -10,7 +10,6 @@ public interface IReceiptService
     Task DeletePositionAsync(int idReceipt, int idPosition);
     Task<IReadOnlyCollection<ReceiptDto>> GetAllAsync();
     Task<IReadOnlyCollection<ReceiptDto>> GetAsync(DateTime from, DateTime to);
-    Task<ReceiptDto> GetAsync(int id);
     Task<IReadOnlyCollection<ReceiptDto>> GetAsync(string shopName);
     Task<IReadOnlyCollection<ReceiptPositionDto>> GetPositionsAsync(int idReceipt);
     Task UpdateAsync(int id, UpdateReceiptDto receipt);

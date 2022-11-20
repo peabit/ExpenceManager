@@ -20,7 +20,19 @@ public class ReceiptsController : ControllerBase
         return receipts;
     }
 
-    // TODO: Add GetByPeriod, GetByShopName
+    [HttpGet("{from:datetime}&{to:datetime}")]
+    public async Task<IEnumerable<ReceiptDto>> GetAsync(DateTime from, DateTime to)
+    {
+        var receipts = await _receiptService.GetAsync(from, to);
+        return receipts;
+    }
+
+    [HttpGet("{shopName}")]
+    public async Task<IEnumerable<ReceiptDto>> GetAsync(string shopName)
+    {
+        var receipts = await _receiptService.GetAsync(shopName);
+        return receipts;
+    }
 
     [HttpGet("{receiptId:int}/Positions")]
     public async Task<IEnumerable<ReceiptPositionDto>> GetPositionsAsync(int receiptId)
@@ -36,26 +48,26 @@ public class ReceiptsController : ControllerBase
         return createdReceipt;
     }
 
-    [HttpPost("{id:int}/Positions")]
+    [HttpPost("{receiptId:int}/Positions")]
     public async Task<ReceiptPositionDto> CreatePositionAsync(int receiptId, NewReceiptPositionDto position)
     {
         var createdPosition = await _receiptService.CreatePositionAsync(receiptId, position);
         return createdPosition;
     }
 
-    [HttpPut("{id:int}")]
+    [HttpPut("{receiptId:int}")]
     public async Task UpdateAsync(int receiptId, UpdateReceiptDto receipt)
         => await _receiptService.UpdateAsync(receiptId, receipt);
 
     [HttpPut("{receiptId:int}/Position/{positionId:int}")]
-    public async Task UpdatePosition(int receiptId, int positionId, UpdateReceiptPositionDto position)
+    public async Task UpdatePositionAsync(int receiptId, int positionId, UpdateReceiptPositionDto position)
         => await _receiptService.UpdatePositionAsync(receiptId, positionId, position);
 
-    [HttpDelete("{id:int}")]
+    [HttpDelete("{receiptId:int}")]
     public async Task DeleteAsync(int receiptId)
         => await _receiptService.DeleteAsync(receiptId);
 
     [HttpDelete("{receiptId:int}/Position/{positionId:int}")]
-    public async Task DeletePosition(int receiptId, int positionId)
+    public async Task DeletePositionAsync(int receiptId, int positionId)
         => await _receiptService.DeletePositionAsync(receiptId, positionId);
 }
