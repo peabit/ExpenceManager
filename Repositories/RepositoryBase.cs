@@ -3,7 +3,6 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using Repositories.Interfaces;
-using System.Linq;
 
 namespace Repositories;
 
@@ -12,16 +11,25 @@ public class RepositoryBase<TEntity> : IRepository<TEntity>
 {
     protected readonly RepositoryContext _context;
 
+    protected virtual IQueryable<TEntity> Entities
+        => _context.Set<TEntity>().AsNoTracking();
+
     public RepositoryBase(RepositoryContext context)
         => _context = context;
 
     public async Task<IReadOnlyCollection<TEntity>> GetAllAsync()
-        => await _context.Set<TEntity>().AsNoTracking().ToListAsync();
+        => await Entities.ToListAsync();
 
     public async Task<IReadOnlyCollection<TEntity>> GetAsync(Expression<Func<TEntity, bool>> expression)
-        => await _context.Set<TEntity>().AsNoTracking().Where(expression).ToListAsync();
+        => await Entities.Where(expression).ToListAsync();
 
-    public async Task CreateAsync(TEntity entity)
+    public async Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> expression)
+        => await Entities.FirstAsync(expression);
+
+    public bool Contains(Expression<Func<TEntity, bool>> expression)
+        => Entities.Any(expression);
+
+    public virtual async Task CreateAsync(TEntity entity)
     {
         _context.Set<TEntity>().Add(entity);
         await _context.SaveChangesAsync();
@@ -33,15 +41,9 @@ public class RepositoryBase<TEntity> : IRepository<TEntity>
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(TEntity entity)
     {
-        _context.Set<TEntity>().Remove(new TEntity { Id = id });
+        _context.Set<TEntity>().Remove(entity);
         await _context.SaveChangesAsync();
     }
-
-    public bool Contains(Expression<Func<TEntity, bool>> expression)
-        => _context.Set<TEntity>().Any(expression);
-
-    public bool Contains(int id)
-        => Contains(e => e.Id == id);
 }

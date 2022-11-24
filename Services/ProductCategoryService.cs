@@ -20,12 +20,6 @@ public sealed class ProductCategoryService : IProductCategoryService
     public async Task<IReadOnlyCollection<ProductCategoryDto>> GetAllAsync()
     {
         var categories = await _repository.GetAllAsync();
-
-        if (categories is null)
-        {
-            // TODO: Exceiption
-        }
-
         return _mapper.Map<IReadOnlyCollection<ProductCategoryDto>>(categories);
     }
 
@@ -36,24 +30,17 @@ public sealed class ProductCategoryService : IProductCategoryService
         return _mapper.Map<ProductCategoryDto>(categoryEntity);
     }
 
-    public async Task UpdateAsync(int categoryId, UpdateProductCategoryDto category)
+    public async Task UpdateAsync(int id, UpdateProductCategoryDto category)
     {
-        ThrowIfReceiptNotExist(categoryId);
-
         var categoryEntity = _mapper.Map<ProductCategory>(category);
-        categoryEntity.Id = categoryId;
+        categoryEntity.Id = id;
 
         await _repository.UpdateAsync(categoryEntity);
     }
 
-    public async Task DeleteAsync(int categoryId)
+    public async Task DeleteAsync(int id)
     {
-        ThrowIfReceiptNotExist(categoryId);
-        await _repository.DeleteAsync(categoryId);
-    }
-
-    private void ThrowIfReceiptNotExist(int categoryId)
-    {
-
+        var category = await _repository.GetFirstAsync(с => с.Id == id);
+        await _repository.DeleteAsync(category);
     }
 }

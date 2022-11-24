@@ -8,24 +8,20 @@ namespace Services;
 
 public sealed class ReceiptService : IReceiptService
 {
-    private readonly IReceiptRepository _repository;
+    private readonly IRepository<Receipt> _receiptRepository;
+    private readonly IRepository<ReceiptPosition> _positionRepository;
     private readonly IMapper _mapper;
 
-    public ReceiptService(IReceiptRepository repository, IMapper mapper)
+    public ReceiptService(IRepository<Receipt> receiptRepository, IRepository<ReceiptPosition> positionRepository, IMapper mapper)
     {
-        _repository = repository;
+        _receiptRepository = receiptRepository;
+        _positionRepository = positionRepository;
         _mapper = mapper;
     }
 
     public async Task<IReadOnlyCollection<ReceiptDto>> GetAllAsync()
     {
-        var receipts = await _repository.GetAllAsync();
-
-        if (receipts is null)
-        {
-            // TODO: Exception
-        }
-
+        var receipts = await _receiptRepository.GetAllAsync();
         return _mapper.Map<IReadOnlyCollection<ReceiptDto>>(receipts);
     }
 
@@ -34,64 +30,36 @@ public sealed class ReceiptService : IReceiptService
         var utcFrom = from.ToUniversalTime();
         var utcTo = to.ToUniversalTime();
 
-        var receipts = await _repository.GetAsync(r => r.DateTime >= utcFrom & r.DateTime <= utcTo);
-
-        if (receipts is null)
-        {
-            // TODO: Exception
-        }
+        var receipts = await _receiptRepository.GetAsync(r => r.DateTime >= utcFrom & r.DateTime <= utcTo);
 
         return _mapper.Map<IReadOnlyCollection<ReceiptDto>>(receipts);
     }
 
     public async Task<IReadOnlyCollection<ReceiptDto>> GetAsync(string shopName)
     {
-        var receipts = await _repository.GetAsync(r => r.ShopName == shopName);
-
-        if (receipts is null)
-        {
-            // TODO: Exception
-        }
-
+        var receipts = await _receiptRepository.GetAsync(r => r.ShopName == shopName);
         return _mapper.Map<IReadOnlyCollection<ReceiptDto>>(receipts);
     }
 
-    public async Task<IReadOnlyCollection<ReceiptPositionDto>> GetPositionsAsync(int idReceipt)
+    public async Task<IReadOnlyCollection<ReceiptPositionDto>> GetPositionsAsync(int receiptId)
     {
-        var positions = await _repository.GetPositionsAsync(idReceipt);
-
-        if (positions is null)
-        {
-            // TODO: Exception
-        }
-
+        var positions = await _positionRepository.GetAsync(p => p.ReceiptId == receiptId);
         return _mapper.Map<IReadOnlyCollection<ReceiptPositionDto>>(positions);
     }
 
     public async Task<ReceiptDto> CreateAsync(NewReceiptDto receipt)
     {
-        if (receipt.Positions.Count == 0)
-        {
-            // TODO: Exception
-        }
-
-        // TODO: Product category isn`t exists
-        // TODO: Unit of measurement isn`t exists
-
         var receiptEntity = _mapper.Map<Receipt>(receipt);
-        await _repository.CreateAsync(receiptEntity);
+        await _receiptRepository.CreateAsync(receiptEntity);
         return _mapper.Map<ReceiptDto>(receiptEntity);
     }
 
-    public async Task<ReceiptPositionDto> CreatePositionAsync(int receiptId, NewReceiptPositionDto position)
+    public async Task<ReceiptPositionDto> CreatePositionAsync(int id, NewReceiptPositionDto position)
     {
-        ThrowIfReceiptNotExist(receiptId);
-
         var positionEntity = _mapper.Map<ReceiptPosition>(position);
-        positionEntity.ReceiptId = receiptId;
+        positionEntity.ReceiptId = id;
 
-        // TODO: Add filling navigation properties
-        await _repository.CreatePositionAsync(positionEntity);
+        await _positionRepository.CreateAsync(positionEntity);
 
         return _mapper.Map<ReceiptPositionDto>(positionEntity);
     }
@@ -101,7 +69,7 @@ public sealed class ReceiptService : IReceiptService
         var receiptEntity = _mapper.Map<Receipt>(receipt);
         receiptEntity.Id = id;
 
-        await _repository.UpdateAsync(receiptEntity);
+        await _receiptRepository.UpdateAsync(receiptEntity);
     }
 
     public async Task UpdatePositionAsync(int receiptId, int positionId, UpdateReceiptPositionDto position)
@@ -110,30 +78,18 @@ public sealed class ReceiptService : IReceiptService
         positionEntity.ReceiptId = receiptId;
         positionEntity.Id = positionId;
 
-        await _repository.UpdatePositionAsync(positionEntity);
+        await _positionRepository.UpdateAsync(positionEntity);
     }
 
     public async Task DeleteAsync(int id)
     {
-        ThrowIfReceiptNotExist(id);
-        await _repository.DeleteAsync(id);
+        var receipt = await _receiptRepository.GetFirstAsync(r => r.Id == id);
+        await _receiptRepository.DeleteAsync(receipt);
     }
 
-    public async Task DeletePositionAsync(int idReceipt, int idPosition)
+    public async Task DeletePositionAsync(int receiptId, int positionId)
     {
-        ThrowIfReceiptNotExist(idReceipt);
-        ThrowIfPositionNotExist(idReceipt, idPosition);
-
-        await _repository.DeletePositionAsync(idReceipt, idPosition);
+        var position = await _positionRepository.GetFirstAsync(r => r.ReceiptId == receiptId & r.Id == positionId);
+        await _positionRepository.DeleteAsync(position);
     }
-
-    private void ThrowIfReceiptNotExist(int id)
-    {
-
-    }
-
-    private void ThrowIfPositionNotExist(int idReceipt, int idPosition)
-    {
-
-    }
-}   
+}
