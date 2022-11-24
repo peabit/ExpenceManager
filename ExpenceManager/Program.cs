@@ -15,11 +15,7 @@ builder.Services.AddDbContext<RepositoryContext>(options =>
 );
 builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddScoped<IRepository<Receipt>, ReceiptRepository>();
-builder.Services.AddScoped<IRepository<ReceiptPosition>, ReceiptPositionRepository>();
-builder.Services.AddScoped<IRepository<ProductCategory>, ProductCategoryRepository>();
-builder.Services.AddScoped<IRepository<UnitOfMeasurement>, UnitOfMeasurementRepository>();
-
+builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IReceiptService, ReceiptService>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 builder.Services.AddScoped<IUnitOfMeasurementService, UnitOfMeasurementService>();
