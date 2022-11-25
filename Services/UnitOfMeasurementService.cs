@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Services.Interfaces;
 using Entities;
-using Repositories.Interfaces;
+using Entities.Exceptions;
 using DataTransferObjects;
-using Repositories;
+using Repositories.Interfaces;
+using Services.Interfaces;
 
 namespace Services;
 
@@ -21,6 +21,12 @@ public sealed class UnitOfMeasurementService : IUnitOfMeasurementService
     public async Task<IReadOnlyCollection<UnitOfMeasurementDto>> GetAllAsync()
     {
         var uoms = await _repository.UnitOfMeasurement.GetAllAsync();
+
+        if (uoms.Count == 0)
+        {
+            throw new UnitOfMeasurementCollectionNotFoundException();
+        }
+
         return _mapper.Map<IReadOnlyCollection<UnitOfMeasurementDto>>(uoms);
     }
 
@@ -33,6 +39,11 @@ public sealed class UnitOfMeasurementService : IUnitOfMeasurementService
 
     public async Task UpdateAsync(int id, UpdateUnitOfMeasurementDto uom)
     {
+        if (!_repository.UnitOfMeasurement.Contains(u => u.Id == id))
+        {
+            throw new UnitOfMeasurementNotFoundException(id);
+        }
+
         var uomEntity = _mapper.Map<UnitOfMeasurement>(uom);
         uomEntity.Id = id;
         
@@ -42,6 +53,12 @@ public sealed class UnitOfMeasurementService : IUnitOfMeasurementService
     public async Task DeleteAsync(int id)
     {
         var uom = await _repository.UnitOfMeasurement.GetFirstAsync( u => u.Id == id);
+
+        if (uom is null)
+        {
+            throw new UnitOfMeasurementNotFoundException(id);
+        }
+
         await _repository.UnitOfMeasurement.DeleteAsync(uom);
     }
 }

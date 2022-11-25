@@ -1,7 +1,6 @@
 ﻿using Entities;
-using Repositories.Interfaces;
 
-namespace Repositories;
+namespace Repositories.Interfaces;
 
 public interface IRepositoryManager
 {

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Services.Interfaces;
 using Entities;
-using Repositories.Interfaces;
+using Entities.Exceptions;
 using DataTransferObjects;
-using Repositories;
+using Repositories.Interfaces;
+using Services.Interfaces;
 
 namespace Services;
 
@@ -21,6 +21,12 @@ public sealed class ProductCategoryService : IProductCategoryService
     public async Task<IReadOnlyCollection<ProductCategoryDto>> GetAllAsync()
     {
         var categories = await _repository.ProductCategory.GetAllAsync();
+
+        if (categories.Count == 0)
+        {
+            throw new ProductCategoriyCollectionNotFoundException();
+        }
+
         return _mapper.Map<IReadOnlyCollection<ProductCategoryDto>>(categories);
     }
 
@@ -33,6 +39,11 @@ public sealed class ProductCategoryService : IProductCategoryService
 
     public async Task UpdateAsync(int id, UpdateProductCategoryDto category)
     {
+        if (!_repository.ProductCategory.Contains(p => p.Id == id))
+        {
+            throw new ProductCategoryNotFoundException(id);
+        }
+
         var categoryEntity = _mapper.Map<ProductCategory>(category);
         categoryEntity.Id = id;
 
@@ -42,6 +53,12 @@ public sealed class ProductCategoryService : IProductCategoryService
     public async Task DeleteAsync(int id)
     {
         var category = await _repository.ProductCategory.GetFirstAsync(с => с.Id == id);
+
+        if (category is null)
+        {
+            throw new ProductCategoryNotFoundException(id);
+        }
+
         await _repository.ProductCategory.DeleteAsync(category);
     }
 }
