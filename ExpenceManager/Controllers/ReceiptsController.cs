@@ -45,6 +45,7 @@ public class ReceiptsController : ControllerBase
     public async Task<ReceiptDto> CreateAsync(NewReceiptDto receipt)
     {
         var createdReceipt = await _receiptService.CreateAsync(receipt);
+        //Response.StatusCode = 
         return createdReceipt;
     }
 

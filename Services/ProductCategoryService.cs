@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Entities;
-using Entities.Exceptions;
 using DataTransferObjects;
 using Repositories.Interfaces;
 using Services.Interfaces;
+using Services.Exceptions;
 
 namespace Services;
 

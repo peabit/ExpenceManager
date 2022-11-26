@@ -1,14 +1,19 @@
 using Microsoft.EntityFrameworkCore;
+using ExpenceManager.Filters;
 using ExpenceManager;
 using Repositories;
-using Entities;
 using Repositories.Interfaces;
 using Services.Interfaces;
 using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers(options => options.Filters.Add(new ExceptionFilter()));
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(new ExceptionFilter());
+    options.Filters.Add(new ResponseStatusCodeFilter());
+});
+
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<RepositoryContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL"))

@@ -1,4 +1,4 @@
-﻿namespace Entities.Exceptions;
+﻿namespace Services.Exceptions;
 
 public sealed class ReceiptCollectionNotFoundException : NotFoundException
 {

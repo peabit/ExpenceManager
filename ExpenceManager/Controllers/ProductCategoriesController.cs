@@ -24,6 +24,7 @@ public class ProductCategoriesController : ControllerBase
     public async Task<ProductCategoryDto> CreateAsync(NewProductCategoryDto category)
     {
         var newCategory = await _сategoryService.CreateAsync(category);
+        Response.StatusCode = StatusCodes.Status201Created;
         return newCategory;
     }
 
