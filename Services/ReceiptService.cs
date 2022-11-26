@@ -79,8 +79,13 @@ public sealed class ReceiptService : IReceiptService
         }
 
         var receiptEntity = _mapper.Map<Receipt>(receipt);
+
         await _repository.Receipt.CreateAsync(receiptEntity);
-        return _mapper.Map<ReceiptDto>(receiptEntity);
+        var createdReceipt = _mapper.Map<ReceiptDto>(receiptEntity);
+
+        //createdReceipt.TotalAmount = receipt.Positions.Sum(p => p.Price + p.Quantity);
+
+        return createdReceipt;
     }
 
     public async Task<ReceiptPositionDto> CreatePositionAsync(int receiptId, NewReceiptPositionDto position)
