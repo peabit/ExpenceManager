@@ -23,8 +23,8 @@ public class RepositoryBase<TEntity> : IRepository<TEntity>
     public async Task<IReadOnlyCollection<TEntity>> GetAsync(Expression<Func<TEntity, bool>> expression)
         => await Entities.Where(expression).ToListAsync();
 
-    public async Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> expression)
-        => await Entities.FirstAsync(expression);
+    public async Task<TEntity?> GetFirstOrDefaulAsync(Expression<Func<TEntity, bool>> expression)
+        => await Entities.FirstOrDefaultAsync(expression);
 
     public bool Contains(Expression<Func<TEntity, bool>> expression)
         => Entities.Any(expression);

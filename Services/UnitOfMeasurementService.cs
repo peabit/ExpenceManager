@@ -52,7 +52,7 @@ public sealed class UnitOfMeasurementService : IUnitOfMeasurementService
 
     public async Task DeleteAsync(int id)
     {
-        var uom = await _repository.UnitOfMeasurement.GetFirstAsync( u => u.Id == id);
+        var uom = await _repository.UnitOfMeasurement.GetFirstOrDefaulAsync( u => u.Id == id);
 
         if (uom is null)
         {

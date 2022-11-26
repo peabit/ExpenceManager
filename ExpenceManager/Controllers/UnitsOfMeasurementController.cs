@@ -27,12 +27,12 @@ public class UnitsOfMeasurementController : ControllerBase
         return newUnitOfMeasurement;
     }
 
-    [HttpPut("{unitOfMeasurementId:int}")]
-    public async Task UpdateAsync(int unitOfMeasurementId, UpdateUnitOfMeasurementDto unitOfMeasurement)
-        => await _unitOfMeasurementService.UpdateAsync(unitOfMeasurementId, unitOfMeasurement);
+    [HttpPut("{id:int}")]
+    public async Task UpdateAsync(int id, UpdateUnitOfMeasurementDto unitOfMeasurement)
+        => await _unitOfMeasurementService.UpdateAsync(id, unitOfMeasurement);
 
 
-    [HttpDelete("{unitOfMeasurementId:int}")]
-    public async Task DeleteAsync(int unitOfMeasurementId)
-        => await _unitOfMeasurementService.DeleteAsync(unitOfMeasurementId);
+    [HttpDelete("{id:int}")]
+    public async Task DeleteAsync(int id)
+        => await _unitOfMeasurementService.DeleteAsync(id);
 }

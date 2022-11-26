@@ -16,8 +16,8 @@ public sealed class ReceiptPositionRepository : RepositoryBase<ReceiptPosition>
     {
         await base.CreateAsync(position);
 
-        var updatedPosition = await GetFirstAsync( p => p.Id == position.Id);
-        position.ProductCategory = updatedPosition.ProductCategory;
-        position.UnitOfMeasurement = updatedPosition.UnitOfMeasurement;
+        var updatedPosition = await GetFirstOrDefaulAsync( p => p.Id == position.Id);
+        position.ProductCategory = updatedPosition!.ProductCategory;
+        position.UnitOfMeasurement = updatedPosition!.UnitOfMeasurement;
     }
 }

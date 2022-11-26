@@ -27,11 +27,11 @@ public class ProductCategoriesController : ControllerBase
         return newCategory;
     }
 
-    [HttpPut("{сategorId:int}")]
-    public async Task UpdateAsync(int сategorId, UpdateProductCategoryDto categoryDto)
-        => await _сategoryService.UpdateAsync(сategorId, categoryDto);
+    [HttpPut("{id:int}")]
+    public async Task UpdateAsync(int id, UpdateProductCategoryDto categoryDto)
+        => await _сategoryService.UpdateAsync(id, categoryDto);
 
-    [HttpDelete("{сategorId:int}")]
-    public async Task DeleteAsync(int сategorId)
-        => await _сategoryService.DeleteAsync(сategorId);
+    [HttpDelete("{id:int}")]
+    public async Task DeleteAsync(int id)
+        => await _сategoryService.DeleteAsync(id);
 }

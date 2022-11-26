@@ -21,6 +21,12 @@ public sealed class ReceiptService : IReceiptService
     public async Task<IReadOnlyCollection<ReceiptDto>> GetAllAsync()
     {
         var receipts = await _repository.Receipt.GetAllAsync();
+
+        if (receipts.Count == 0)
+        {
+            throw new ReceiptCollectionNotFoundException();
+        }
+
         return _mapper.Map<IReadOnlyCollection<ReceiptDto>>(receipts);
     }
 
@@ -31,7 +37,10 @@ public sealed class ReceiptService : IReceiptService
 
         var receipts = await _repository.Receipt.GetAsync(r => r.DateTime >= utcFrom & r.DateTime <= utcTo);
 
-        ThrowIfReceiptsNotFound(receipts);
+        if (receipts.Count == 0)
+        {
+            throw new ReceiptNotFoundByPeriodException(from, to);
+        }
 
         return _mapper.Map<IReadOnlyCollection<ReceiptDto>>(receipts);
     }
@@ -40,19 +49,35 @@ public sealed class ReceiptService : IReceiptService
     {
         var receipts = await _repository.Receipt.GetAsync(r => r.ShopName == shopName);
 
-        ThrowIfReceiptsNotFound(receipts);
+        if (receipts.Count == 0)
+        {
+            throw new ReceiptNotFoundByShopNameException(shopName);
+        }
 
         return _mapper.Map<IReadOnlyCollection<ReceiptDto>>(receipts);
     }
 
     public async Task<IReadOnlyCollection<ReceiptPositionDto>> GetPositionsAsync(int receiptId)
     {
+        ThrowIfReceiptNotFound(receiptId);
+
         var positions = await _repository.ReceiptPosition.GetAsync(p => p.ReceiptId == receiptId);
         return _mapper.Map<IReadOnlyCollection<ReceiptPositionDto>>(positions);
     }
 
     public async Task<ReceiptDto> CreateAsync(NewReceiptDto receipt)
     {
+        if (receipt.Positions.Count == 0)
+        {
+            throw new ReceiptWithoutPositionsException();
+        }
+
+        foreach (var position in receipt.Positions)
+        {
+            ThrowIfProductCategoryNotFound(position.ProductCategoryId);
+            ThrowIfUnitOfMeasurementNotFound(position.UnitOfMeasurementId);
+        }
+
         var receiptEntity = _mapper.Map<Receipt>(receipt);
         await _repository.Receipt.CreateAsync(receiptEntity);
         return _mapper.Map<ReceiptDto>(receiptEntity);
@@ -60,7 +85,9 @@ public sealed class ReceiptService : IReceiptService
 
     public async Task<ReceiptPositionDto> CreatePositionAsync(int receiptId, NewReceiptPositionDto position)
     {
-        ThrowIfReceiptNotExist(receiptId);
+        ThrowIfReceiptNotFound(receiptId);
+        ThrowIfProductCategoryNotFound(position.ProductCategoryId);
+        ThrowIfUnitOfMeasurementNotFound(position.UnitOfMeasurementId);
 
         var positionEntity = _mapper.Map<ReceiptPosition>(position);
         positionEntity.ReceiptId = receiptId;
@@ -72,7 +99,7 @@ public sealed class ReceiptService : IReceiptService
 
     public async Task UpdateAsync(int id, UpdateReceiptDto receipt)
     {
-        ThrowIfReceiptNotExist(id);
+        ThrowIfReceiptNotFound(id);
 
         var receiptEntity = _mapper.Map<Receipt>(receipt);
         receiptEntity.Id = id;
@@ -82,22 +109,15 @@ public sealed class ReceiptService : IReceiptService
 
     public async Task UpdatePositionAsync(int receiptId, int positionId, UpdateReceiptPositionDto position)
     {
-        ThrowIfReceiptNotExist(receiptId);
+        ThrowIfReceiptNotFound(receiptId);
 
-        if (!_repository.ReceiptPosition.Contains(r => r.Id == positionId))
+        if (!_repository.ReceiptPosition.Contains(r => r.ReceiptId == receiptId & r.Id == positionId))
         {
-            // TODO
+            throw new ReceiptPositionNotFoundException(receiptId, positionId);
         }
 
-        if (!_repository.ProductCategory.Contains(p => p.Id == position.ProductCategoryId))
-        {
-            throw new ProductCategoryNotFoundException(position.ProductCategoryId);
-        }
-
-        if (!_repository.UnitOfMeasurement.Contains(u => u.Id == position.UnitOfMeasurementId))
-        {
-            throw new UnitOfMeasurementNotFoundException(position.UnitOfMeasurementId);
-        }
+        ThrowIfProductCategoryNotFound(position.ProductCategoryId);
+        ThrowIfUnitOfMeasurementNotFound(position.UnitOfMeasurementId);
 
         var positionEntity = _mapper.Map<ReceiptPosition>(position);
         positionEntity.ReceiptId = receiptId;
@@ -108,11 +128,11 @@ public sealed class ReceiptService : IReceiptService
 
     public async Task DeleteAsync(int id)
     {
-        var receipt = await _repository.Receipt.GetFirstAsync(r => r.Id == id);
+        var receipt = await _repository.Receipt.GetFirstOrDefaulAsync(r => r.Id == id);
 
         if (receipt is null)
         {
-            // TODO
+            throw new ReceiptNotFoundException(id);
         }
 
         await _repository.Receipt.DeleteAsync(receipt);
@@ -120,31 +140,39 @@ public sealed class ReceiptService : IReceiptService
 
     public async Task DeletePositionAsync(int receiptId, int positionId)
     {
-        ThrowIfReceiptNotExist(receiptId);
+        ThrowIfReceiptNotFound(receiptId);
 
-        var position = await _repository.ReceiptPosition.GetFirstAsync(r => r.ReceiptId == receiptId & r.Id == positionId);
+        var position = await _repository.ReceiptPosition.GetFirstOrDefaulAsync(r => r.ReceiptId == receiptId & r.Id == positionId);
 
         if (position is null)
         {
-            // TODO
+            throw new ReceiptPositionNotFoundException(receiptId, positionId);
         }
 
         await _repository.ReceiptPosition.DeleteAsync(position);
     }
 
-    private void ThrowIfReceiptNotExist(int id)
+    private void ThrowIfReceiptNotFound(int id)
     {
         if (!_repository.Receipt.Contains(r => r.Id == id))
         {
-            // TODO
+            throw new ReceiptNotFoundException(id);
         }
     }
 
-    private void ThrowIfReceiptsNotFound(IReadOnlyCollection<Receipt> receipts)
+    private void ThrowIfProductCategoryNotFound(int productCategoryId)
     {
-        if (receipts.Count == 0)
+        if (!_repository.ProductCategory.Contains(pc => pc.Id == productCategoryId))
         {
-            // TODO 
+            throw new ProductCategoryNotFoundException(productCategoryId);
+        }
+    }
+
+    private void ThrowIfUnitOfMeasurementNotFound(int unitOfMeasurementId)
+    {
+        if (!_repository.UnitOfMeasurement.Contains(uom => uom.Id == unitOfMeasurementId))
+        {
+            throw new UnitOfMeasurementNotFoundException(unitOfMeasurementId);
         }
     }
 }

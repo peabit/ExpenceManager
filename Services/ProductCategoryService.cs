@@ -52,7 +52,7 @@ public sealed class ProductCategoryService : IProductCategoryService
 
     public async Task DeleteAsync(int id)
     {
-        var category = await _repository.ProductCategory.GetFirstAsync(с => с.Id == id);
+        var category = await _repository.ProductCategory.GetFirstOrDefaulAsync(с => с.Id == id);
 
         if (category is null)
         {
